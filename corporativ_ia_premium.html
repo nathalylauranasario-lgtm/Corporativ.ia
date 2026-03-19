@@ -1,0 +1,859 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;font-size:14px}
+
+/* TOKENS */
+:root{
+  --ink:#0D1117;
+  --ink2:#3D4452;
+  --ink3:#7A8194;
+  --ink4:#B0B7C3;
+  --surface:#FFFFFF;
+  --surface2:#F7F8FA;
+  --surface3:#EEF0F5;
+  --accent:#5B4FE8;
+  --accent2:#7B6FF0;
+  --accent-bg:#F0EEFF;
+  --accent-border:#C8C2F8;
+  --teal:#0FAE85;
+  --teal-bg:#E6F9F4;
+  --amber:#D97706;
+  --amber-bg:#FEF3C7;
+  --red:#DC2626;
+  --red-bg:#FEE2E2;
+  --border:#E4E7EE;
+  --border2:#CDD1DC;
+  --radius:10px;
+  --radius-lg:14px;
+  --radius-xl:20px;
+}
+
+/* SHELL */
+.shell{display:flex;height:760px;border-radius:16px;overflow:hidden;border:1px solid var(--border);background:var(--surface2)}
+
+/* SIDEBAR */
+.sb{width:220px;background:var(--ink);display:flex;flex-direction:column;flex-shrink:0}
+.sb-logo{padding:22px 20px 16px;display:flex;align-items:center;gap:10px}
+.sb-logo-mark{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sb-logo-mark svg{width:18px;height:18px}
+.sb-logo-text{color:#fff;font-size:14px;font-weight:600;letter-spacing:-.2px}
+.sb-logo-sub{color:rgba(255,255,255,.35);font-size:10px;margin-top:1px}
+.sb-user{margin:0 12px 8px;padding:10px 12px;background:rgba(255,255,255,.05);border-radius:var(--radius);display:flex;align-items:center;gap:10px;border:1px solid rgba(255,255,255,.06)}
+.sb-av{width:32px;height:32px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#fff;flex-shrink:0}
+.sb-uname{color:#fff;font-size:12px;font-weight:500}
+.sb-urole{color:rgba(255,255,255,.35);font-size:10px;margin-top:1px}
+.sb-status{width:7px;height:7px;border-radius:50%;background:#22C55E;margin-left:auto;flex-shrink:0}
+.sb-nav{flex:1;padding:4px 0;overflow-y:auto}
+.sb-sec{padding:12px 20px 4px;font-size:9px;font-weight:600;color:rgba(255,255,255,.2);letter-spacing:1px;text-transform:uppercase}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;margin:1px 10px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.5);font-size:12.5px;font-weight:500;transition:all .15s;position:relative}
+.sb-item:hover{background:rgba(255,255,255,.06);color:rgba(255,255,255,.85)}
+.sb-item.on{background:var(--accent);color:#fff}
+.sb-item.on svg{opacity:1}
+.sb-item svg{width:15px;height:15px;flex-shrink:0;opacity:.6}
+.sb-item.on .sb-dot{display:none}
+.sb-notif{margin-left:auto;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:10px;line-height:1.4}
+.sb-ia-badge{margin:12px;padding:10px 12px;background:rgba(91,79,232,.15);border:1px solid rgba(91,79,232,.25);border-radius:var(--radius)}
+.sb-ia-badge-title{color:var(--accent2);font-size:11px;font-weight:600;margin-bottom:3px;display:flex;align-items:center;gap:5px}
+.sb-ia-badge-sub{color:rgba(255,255,255,.35);font-size:10px;line-height:1.4}
+.ia-pulse{width:6px;height:6px;border-radius:50%;background:var(--accent2)}
+
+/* MAIN */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* TOPBAR */
+.tb{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 22px;gap:16px;flex-shrink:0}
+.tb-title{font-size:15px;font-weight:600;color:var(--ink);letter-spacing:-.2px}
+.tb-sep{width:1px;height:18px;background:var(--border)}
+.tb-crumb{font-size:12px;color:var(--ink3)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.tb-pill{font-size:11px;padding:4px 10px;border-radius:20px;font-weight:600}
+.pill-accent{background:var(--accent-bg);color:var(--accent)}
+.pill-teal{background:var(--teal-bg);color:var(--teal)}
+.pill-amber{background:var(--amber-bg);color:var(--amber)}
+.pill-red{background:var(--red-bg);color:var(--red)}
+.tb-icon-btn{width:32px;height:32px;border-radius:8px;border:1px solid var(--border);background:var(--surface);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--ink3)}
+.tb-icon-btn:hover{background:var(--surface2)}
+
+/* CONTENT */
+.cnt{flex:1;overflow-y:auto;padding:22px;background:var(--surface2)}
+.screen{display:none}
+.screen.on{display:block}
+
+/* SECTION HEADER */
+.sec-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.sec-title{font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.4px;line-height:1.2}
+.sec-sub{font-size:13px;color:var(--ink3);margin-top:3px}
+.sec-action{font-size:12px;font-weight:600;color:var(--accent);cursor:pointer;padding:7px 14px;border:1px solid var(--accent-border);border-radius:8px;background:var(--accent-bg);white-space:nowrap}
+.sec-action:hover{background:var(--accent);color:#fff}
+
+/* CARDS */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:700;color:var(--ink3);letter-spacing:.5px;text-transform:uppercase;margin-bottom:14px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+
+/* STAT CARDS */
+.stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px}
+.stat-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.stat-val{font-size:26px;font-weight:700;color:var(--ink);letter-spacing:-.5px;line-height:1}
+.stat-label{font-size:11px;color:var(--ink3);margin-top:4px;font-weight:500}
+.stat-delta{font-size:11px;margin-top:6px;font-weight:600;display:flex;align-items:center;gap:4px}
+.delta-up{color:var(--teal)}
+.delta-down{color:var(--red)}
+.delta-arrow{font-size:10px}
+
+/* ACCENT HERO CARD */
+.hero-card{background:var(--ink);border-radius:var(--radius-xl);padding:22px 24px;margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;gap:20px;border:1px solid rgba(255,255,255,.06)}
+.hero-label{font-size:10px;font-weight:700;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-size:16px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3}
+.hero-sub{font-size:12px;color:rgba(255,255,255,.45)}
+.hero-pbar{height:4px;background:rgba(255,255,255,.1);border-radius:2px;width:180px;margin:10px 0 6px;overflow:hidden}
+.hero-pfill{height:100%;border-radius:2px;background:var(--accent2)}
+.hero-pct{font-size:11px;color:rgba(255,255,255,.4)}
+.hero-btn{padding:10px 20px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;letter-spacing:.2px}
+.hero-btn:hover{background:var(--accent2)}
+
+/* PROGRESS BAR */
+.pbar{height:5px;background:var(--surface3);border-radius:3px;overflow:hidden}
+.pfill{height:100%;border-radius:3px}
+.pfill-accent{background:var(--accent)}
+.pfill-teal{background:var(--teal)}
+.pfill-amber{background:var(--amber)}
+.pfill-red{background:var(--red)}
+
+/* ROW ITEMS */
+.ri{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border)}
+.ri:last-child{border-bottom:none}
+.ri-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.ri-info{flex:1;min-width:0}
+.ri-name{font-size:13px;font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ri-sub{font-size:11px;color:var(--ink3);margin-top:1px}
+.ri-right{flex-shrink:0;text-align:right}
+
+/* CHART BARS */
+.chart-wrap{display:flex;align-items:flex-end;gap:6px;height:90px;padding-bottom:4px}
+.cbar-w{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.cbar{width:100%;border-radius:4px 4px 0 0;background:var(--accent);opacity:.6;transition:opacity .2s,height .3s}
+.cbar:hover{opacity:1}
+.cbar-l{font-size:9px;color:var(--ink4)}
+
+/* HUMOR TRACK */
+.mood-track{display:flex;gap:6px}
+.mood-btn{flex:1;padding:10px 6px;border-radius:10px;text-align:center;cursor:pointer;border:1.5px solid var(--border);background:var(--surface2);transition:all .15s}
+.mood-btn:hover{border-color:var(--border2);background:var(--surface)}
+.mood-btn.on{border-color:var(--accent);background:var(--accent-bg)}
+.mood-icon{width:24px;height:24px;border-radius:50%;margin:0 auto 5px;display:flex;align-items:center;justify-content:center}
+.mood-lbl{font-size:10px;font-weight:600;color:var(--ink3)}
+.mood-btn.on .mood-lbl{color:var(--accent)}
+
+/* FEED */
+.feed-post{padding:14px 0;border-bottom:1px solid var(--border)}
+.feed-post:last-child{border-bottom:none}
+.feed-head{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.feed-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.feed-name{font-size:13px;font-weight:600;color:var(--ink)}
+.feed-meta{font-size:11px;color:var(--ink3)}
+.feed-body{font-size:13px;color:var(--ink2);line-height:1.6;margin-bottom:10px}
+.feed-footer{display:flex;gap:14px}
+.feed-act{font-size:11px;font-weight:600;color:var(--ink3);cursor:pointer;display:flex;align-items:center;gap:4px;padding:4px 8px;border-radius:6px}
+.feed-act:hover{background:var(--surface3);color:var(--ink2)}
+.feed-act.liked{color:var(--accent)}
+
+/* FEEDBACK CARDS */
+.fb-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:10px;background:var(--surface)}
+.fb-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.fb-body{font-size:13px;color:var(--ink2);line-height:1.6;padding:12px 14px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--accent);font-style:italic}
+.fb-stars{display:flex;gap:3px;margin-top:8px}
+.star-filled{color:#F59E0B;font-size:13px}
+.star-empty{color:var(--surface3);font-size:13px}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--surface3);border-radius:10px;padding:4px;margin-bottom:18px}
+.tab{flex:1;padding:7px;text-align:center;font-size:12px;font-weight:600;color:var(--ink3);cursor:pointer;border-radius:7px;transition:all .15s}
+.tab.on{background:var(--surface);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+
+/* 1:1 */
+.meet-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:10px;display:flex;gap:14px;background:var(--surface);cursor:pointer}
+.meet-card:hover{border-color:var(--accent-border)}
+.meet-date-box{width:44px;text-align:center;background:var(--accent-bg);border-radius:9px;padding:7px 4px;flex-shrink:0;border:1px solid var(--accent-border)}
+.meet-day{font-size:20px;font-weight:700;color:var(--accent);line-height:1}
+.meet-mon{font-size:9px;font-weight:700;color:var(--accent);text-transform:uppercase;letter-spacing:.5px}
+.meet-info{flex:1}
+.meet-title{font-size:13px;font-weight:600;color:var(--ink);margin-bottom:2px}
+.meet-meta{font-size:11px;color:var(--ink3)}
+.meet-status{font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px}
+.pauta-item{display:flex;align-items:flex-start;gap:10px;padding:9px 0;border-bottom:1px solid var(--border)}
+.pauta-item:last-child{border-bottom:none}
+.pcheck{width:16px;height:16px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;margin-top:1px;cursor:pointer;background:var(--surface2);transition:all .15s}
+.pcheck.done{background:var(--teal);border-color:var(--teal)}
+.ptext{font-size:13px;color:var(--ink2);line-height:1.4}
+.ptext.done{text-decoration:line-through;color:var(--ink4)}
+
+/* OKR */
+.okr-obj-card{border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:12px;background:var(--surface)}
+.okr-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.okr-title{font-size:13px;font-weight:700;color:var(--ink);flex:1}
+.okr-pct-badge{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px}
+.okr-kr-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-top:1px solid var(--border)}
+.okr-kr-label{font-size:12px;color:var(--ink2);flex:1}
+.okr-kr-val{font-size:11px;font-weight:600;color:var(--ink3);white-space:nowrap}
+
+/* CURSOS */
+.curso-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.curso-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:border-color .15s}
+.curso-card:hover{border-color:var(--accent-border)}
+.curso-thumb{height:88px;display:flex;align-items:center;justify-content:center;position:relative}
+.curso-badge{position:absolute;top:10px;left:10px;font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;letter-spacing:.3px;text-transform:uppercase}
+.curso-body{padding:14px 16px}
+.curso-tag{font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;margin-bottom:5px}
+.curso-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:4px;line-height:1.3}
+.curso-meta{font-size:11px;color:var(--ink3);margin-bottom:10px}
+.curso-footer{display:flex;align-items:center;gap:8px}
+.curso-pct{font-size:11px;font-weight:700;color:var(--ink3)}
+
+/* CLIMA */
+.clima-q{font-size:14px;font-weight:600;color:var(--ink);margin-bottom:12px}
+.nps-row{display:flex;gap:4px;margin-bottom:6px}
+.nps-n{flex:1;height:36px;border-radius:7px;border:1.5px solid var(--border);background:var(--surface2);font-size:12px;font-weight:700;cursor:pointer;color:var(--ink3);display:flex;align-items:center;justify-content:center;transition:all .15s}
+.nps-n:hover{border-color:var(--border2);background:var(--surface)}
+.nps-n.on{border-color:var(--accent);background:var(--accent-bg);color:var(--accent)}
+.nps-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--ink4);margin-bottom:20px}
+
+/* COMPOSE */
+.compose-box{background:var(--surface);border:1.5px solid var(--border);border-radius:var(--radius);padding:12px 14px;margin-bottom:12px}
+.compose-box:focus-within{border-color:var(--accent-border)}
+.compose-box textarea{width:100%;border:none;background:transparent;font-size:13px;color:var(--ink);resize:none;outline:none;min-height:48px;font-family:inherit;line-height:1.6}
+.compose-footer{display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)}
+
+/* BUTTONS */
+.btn{padding:8px 16px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;border:none;letter-spacing:.1px;transition:all .15s}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:var(--surface2);color:var(--ink2);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--surface3)}
+.btn-ghost{background:transparent;color:var(--ink3);border:1px solid var(--border)}
+
+/* ALERT */
+.alert{border-radius:10px;padding:12px 14px;margin-bottom:10px;display:flex;gap:10px;align-items:flex-start}
+.alert-dot{width:6px;height:6px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.alert-text{font-size:12px;line-height:1.5}
+.alert-amber{background:var(--amber-bg);border:1px solid #FDE68A}
+.alert-amber .alert-dot{background:var(--amber)}
+.alert-amber .alert-text{color:#92400E}
+
+/* TRILHA timeline */
+.timeline-item{display:flex;gap:14px;padding:10px 0}
+.tl-left{display:flex;flex-direction:column;align-items:center}
+.tl-dot{width:14px;height:14px;border-radius:50%;flex-shrink:0;margin-top:2px}
+.tl-dot-done{background:var(--teal);border:2px solid #9FE1CB}
+.tl-dot-active{background:var(--accent);border:2px solid var(--accent2)}
+.tl-dot-locked{background:var(--surface3);border:2px solid var(--border)}
+.tl-line{flex:1;width:2px;background:var(--border);margin:3px 0}
+.tl-body{flex:1;padding-bottom:10px}
+.tl-title{font-size:13px;font-weight:600;color:var(--ink)}
+.tl-meta{font-size:11px;color:var(--ink3);margin-top:2px}
+
+/* LOGIN PAGE */
+.login-shell{display:flex;width:100%;height:100%}
+.login-left{flex:1;background:var(--ink);display:flex;flex-direction:column;justify-content:space-between;padding:40px 44px;position:relative;overflow:hidden}
+.login-deco{position:absolute;right:-60px;top:50%;transform:translateY(-50%);width:280px;height:280px;border-radius:50%;background:rgba(91,79,232,.12);border:1px solid rgba(91,79,232,.15)}
+.login-deco2{position:absolute;right:20px;top:30%;width:160px;height:160px;border-radius:50%;background:rgba(91,79,232,.06);border:1px solid rgba(91,79,232,.08)}
+.login-brand{display:flex;align-items:center;gap:10px}
+.login-brand-mark{width:36px;height:36px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center}
+.login-brand-text{color:#fff;font-size:16px;font-weight:700;letter-spacing:-.3px}
+.login-headline{font-size:32px;font-weight:800;color:#fff;line-height:1.2;letter-spacing:-.6px;max-width:320px;margin-bottom:16px}
+.login-headline span{color:var(--accent2)}
+.login-features{display:flex;flex-direction:column;gap:10px}
+.login-feat{display:flex;align-items:center;gap:10px}
+.login-feat-check{width:18px;height:18px;border-radius:5px;background:rgba(91,79,232,.2);border:1px solid rgba(91,79,232,.3);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.login-feat-text{color:rgba(255,255,255,.55);font-size:12px;font-weight:500}
+.login-right{width:400px;background:var(--surface);display:flex;flex-direction:column;justify-content:center;padding:48px}
+.login-form-title{font-size:22px;font-weight:800;color:var(--ink);margin-bottom:4px;letter-spacing:-.4px}
+.login-form-sub{font-size:13px;color:var(--ink3);margin-bottom:28px}
+.lf{margin-bottom:14px}
+.lf label{display:block;font-size:11px;font-weight:700;color:var(--ink2);margin-bottom:6px;letter-spacing:.2px}
+.lf input{width:100%;padding:10px 14px;border:1.5px solid var(--border);border-radius:9px;font-size:13px;color:var(--ink);background:var(--surface2);transition:border-color .15s}
+.lf input:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+.btn-login-full{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:9px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.2px;margin-top:4px}
+.btn-login-full:hover{background:var(--accent2)}
+.login-footer{text-align:center;font-size:12px;color:var(--ink3);margin-top:16px}
+.login-footer a{color:var(--accent);font-weight:600;cursor:pointer}
+.login-tags{display:flex;gap:6px;margin-top:24px;flex-wrap:wrap}
+.login-tag{font-size:10px;font-weight:600;padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.35);border:1px solid rgba(255,255,255,.08)}
+</style>
+
+<div class="shell">
+
+  <!-- ═══════ LOGIN ═══════ -->
+  <div class="login-shell" id="pg-login">
+    <div class="login-left">
+      <div class="login-deco"></div>
+      <div class="login-deco2"></div>
+      <div class="login-brand">
+        <div class="login-brand-mark">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3L4 7v6l6 4 6-4V7L10 3z" stroke="#fff" stroke-width="1.5" fill="none" stroke-linejoin="round"/><circle cx="10" cy="10" r="2" fill="#fff"/></svg>
+        </div>
+        <div class="login-brand-text">Corporativ.ia</div>
+      </div>
+      <div>
+        <div class="login-headline">O futuro do<br>aprendizado<br><span>corporativo.</span></div>
+        <div class="login-features">
+          <div class="login-feat"><div class="login-feat-check"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5L8 3" stroke="#7B6FF0" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="login-feat-text">Trilhas personalizadas com IA generativa</div></div>
+          <div class="login-feat"><div class="login-feat-check"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5L8 3" stroke="#7B6FF0" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="login-feat-text">Feedbacks, 1:1 e OKRs em tempo real</div></div>
+          <div class="login-feat"><div class="login-feat-check"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5L8 3" stroke="#7B6FF0" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="login-feat-text">Diagnóstico cultural e learning analytics</div></div>
+          <div class="login-feat"><div class="login-feat-check"><svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5l2.5 2.5L8 3" stroke="#7B6FF0" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="login-feat-text">Gamificação, clima e engajamento</div></div>
+        </div>
+        <div class="login-tags">
+          <div class="login-tag">HRTech</div>
+          <div class="login-tag">EdTech Corporativa</div>
+          <div class="login-tag">IA Adaptativa</div>
+          <div class="login-tag">LXP</div>
+        </div>
+      </div>
+      <div style="font-size:11px;color:rgba(255,255,255,.2)">© 2025 Corporativ.ia · Todos os direitos reservados</div>
+    </div>
+    <div class="login-right">
+      <div class="login-form-title">Bom te ver de volta.</div>
+      <div class="login-form-sub">Entre com sua conta corporativa para continuar.</div>
+      <div class="lf"><label>E-mail corporativo</label><input type="email" placeholder="voce@empresa.com.br" value="lucas@empresa.com.br"/></div>
+      <div class="lf"><label>Senha</label><input type="password" value="••••••••"/></div>
+      <button class="btn-login-full" onclick="goApp('sc-home')">Entrar na plataforma →</button>
+      <div class="login-footer">Esqueceu sua senha? <a>Recuperar acesso</a></div>
+      <div style="margin-top:28px;padding-top:20px;border-top:1px solid var(--border)">
+        <div style="font-size:11px;color:var(--ink3);text-align:center;margin-bottom:12px;font-weight:600">EMPRESAS QUE CONFIAM</div>
+        <div style="display:flex;gap:16px;justify-content:center;align-items:center">
+          <div style="font-size:12px;font-weight:700;color:var(--ink4)">Grupo Alpha</div>
+          <div style="width:1px;height:12px;background:var(--border)"></div>
+          <div style="font-size:12px;font-weight:700;color:var(--ink4)">TechCorp</div>
+          <div style="width:1px;height:12px;background:var(--border)"></div>
+          <div style="font-size:12px;font-weight:700;color:var(--ink4)">Inovar RH</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ APP ═══════ -->
+  <div style="display:none;width:100%;height:100%" id="pg-app">
+    <div class="sb">
+      <div class="sb-logo">
+        <div class="sb-logo-mark"><svg width="18" height="18" viewBox="0 0 20 20" fill="none"><path d="M10 3L4 7v6l6 4 6-4V7L10 3z" stroke="#fff" stroke-width="1.5" fill="none" stroke-linejoin="round"/><circle cx="10" cy="10" r="2" fill="#fff"/></svg></div>
+        <div><div class="sb-logo-text">Corporativ.ia</div><div class="sb-logo-sub">Plataforma inteligente</div></div>
+      </div>
+      <div class="sb-user">
+        <div class="sb-av">LT</div>
+        <div><div class="sb-uname">Lucas Talacio</div><div class="sb-urole">Comercial · Analista</div></div>
+        <div class="sb-status"></div>
+      </div>
+      <div class="sb-nav">
+        <div class="sb-sec">Visão geral</div>
+        <div class="sb-item on" data-sc="sc-home" onclick="nav(this)">
+          <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="1" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="1" y="9" width="6" height="6" rx="1.5" fill="currentColor"/><rect x="9" y="9" width="6" height="6" rx="1.5" fill="currentColor"/></svg>
+          Início
+        </div>
+        <div class="sb-sec">Pessoas</div>
+        <div class="sb-item" data-sc="sc-feed" onclick="nav(this)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M2 3h12v8H9l-3 2v-2H2V3z" stroke="currentColor" stroke-width="1.3" fill="none" stroke-linejoin="round"/></svg>
+          Feed da empresa
+        </div>
+        <div class="sb-item" data-sc="sc-feedback" onclick="nav(this)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4H14l-3.5 2.5 1.5 4L8 10l-4 2.5 1.5-4L2 6h4.5z" stroke="currentColor" stroke-width="1.2" fill="none" stroke-linejoin="round"/></svg>
+          Feedbacks
+          <span class="sb-notif">3</span>
+        </div>
+        <div class="sb-item" data-sc="sc-11" onclick="nav(this)">
+          <svg viewBox="0 0 16 16" fill="none"><circle cx="5" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><circle cx="11" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M1 13c0-2 1.8-3 4-3s4 1 4 3M11 10c1.5 0 4 .8 4 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          Reuniões 1:1
+        </div>
+        <div class="sb-item" data-sc="sc-clima" onclick="nav(this)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M8 3a5 5 0 100 10A5 5 0 008 3z" stroke="currentColor" stroke-width="1.3"/><path d="M8 1v1M8 14v1M1 8h1M14 8h1" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          Clima
+        </div>
+        <div class="sb-sec">Desempenho</div>
+        <div class="sb-item" data-sc="sc-okr" onclick="nav(this)">
+          <svg viewBox="0 0 16 16" fill="none"><path d="M2 12l4-5 3 3 5-7" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          OKRs e metas
+        </div>
+        <div class="sb-sec">Aprendizado</div>
+        <div class="sb-item" data-sc="sc-cursos" onclick="nav(this)">
+          <svg viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="9" rx="1.5" stroke="currentColor" stroke-width="1.3"/><path d="M6 6.5l4 2-4 2v-4z" fill="currentColor"/></svg>
+          Cursos
+        </div>
+        <div class="sb-item" data-sc="sc-trilha" onclick="nav(this)">
+          <svg viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="currentColor" stroke-width="1.3"/><path d="M8 5v3l2 2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          Minha trilha
+        </div>
+      </div>
+      <div class="sb-ia-badge">
+        <div class="sb-ia-badge-title"><div class="ia-pulse"></div>IA ativa</div>
+        <div class="sb-ia-badge-sub">Analisando seu perfil e recomendando conteúdo em tempo real.</div>
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="tb">
+        <div class="tb-title" id="tb-title">Início</div>
+        <div class="tb-sep"></div>
+        <div class="tb-crumb" id="tb-crumb">Visão do colaborador</div>
+        <div class="tb-right">
+          <span class="tb-pill pill-accent" id="tb-mode">Colaborador</span>
+          <span class="tb-pill pill-teal">IA ligada</span>
+          <div class="tb-icon-btn">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M3 13c0-2.5 2.2-4 5-4s5 1.5 5 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="cnt">
+
+        <!-- HOME -->
+        <div class="screen on" id="sc-home">
+          <div class="sec-head">
+            <div><div class="sec-title">Olá, Lucas 👋</div><div class="sec-sub">Você tem 3 feedbacks novos e uma 1:1 amanhã às 14h.</div></div>
+          </div>
+          <div class="hero-card">
+            <div>
+              <div class="hero-label">Trilha em andamento</div>
+              <div class="hero-title">Técnicas avançadas de negociação</div>
+              <div class="hero-sub">Onboarding Comercial · Módulo 5 de 8</div>
+              <div class="hero-pbar"><div class="hero-pfill" style="width:62%"></div></div>
+              <div class="hero-pct">62% concluído · ~50 min restantes</div>
+            </div>
+            <button class="hero-btn" onclick="nav(document.querySelector('[data-sc=sc-trilha]'))">Continuar agora →</button>
+          </div>
+          <div class="g4">
+            <div class="stat"><div class="stat-icon" style="background:var(--accent-bg)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12l4-5 3 3 5-7" stroke="#5B4FE8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-val">12</div><div class="stat-label">Módulos concluídos</div><div class="stat-delta delta-up"><span class="delta-arrow">↑</span>3 esta semana</div></div>
+            <div class="stat"><div class="stat-icon" style="background:var(--teal-bg)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 3h12v8H9l-3 2v-2H2V3z" stroke="#0FAE85" stroke-width="1.3" fill="none" stroke-linejoin="round"/></svg></div><div class="stat-val">8</div><div class="stat-label">Feedbacks recebidos</div><div class="stat-delta delta-up"><span class="delta-arrow">↑</span>3 não lidos</div></div>
+            <div class="stat"><div class="stat-icon" style="background:var(--amber-bg)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="12" height="12" rx="2" stroke="#D97706" stroke-width="1.3"/><path d="M5 8h6M8 5v6" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="stat-val">67%</div><div class="stat-label">OKRs no prazo</div><div class="stat-delta delta-down"><span class="delta-arrow">↓</span>1 em risco</div></div>
+            <div class="stat"><div class="stat-icon" style="background:#F0FDF4"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4H14l-3.5 2.5 1.5 4L8 10l-4 2.5 1.5-4L2 6h4.5z" stroke="#16A34A" stroke-width="1.2" fill="none" stroke-linejoin="round"/></svg></div><div class="stat-val">74</div><div class="stat-label">Pontos de engajamento</div><div class="stat-delta delta-up"><span class="delta-arrow">↑</span>Top 10% do time</div></div>
+          </div>
+          <div class="g2">
+            <div>
+              <div class="card">
+                <div class="card-title">Engajamento semanal</div>
+                <div class="chart-wrap">
+                  <div class="cbar-w"><div class="cbar" style="height:55px"></div><div class="cbar-l">Seg</div></div>
+                  <div class="cbar-w"><div class="cbar" style="height:70px"></div><div class="cbar-l">Ter</div></div>
+                  <div class="cbar-w"><div class="cbar" style="height:48px"></div><div class="cbar-l">Qua</div></div>
+                  <div class="cbar-w"><div class="cbar" style="height:82px"></div><div class="cbar-l">Qui</div></div>
+                  <div class="cbar-w"><div class="cbar" style="height:60px"></div><div class="cbar-l">Sex</div></div>
+                  <div class="cbar-w"><div class="cbar" style="height:88px;opacity:1"></div><div class="cbar-l">Sáb</div></div>
+                  <div class="cbar-w"><div class="cbar" style="height:20px"></div><div class="cbar-l">Dom</div></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Humor de hoje</div>
+                <div class="mood-track">
+                  <div class="mood-btn" onclick="selMood(this)"><div class="mood-icon" style="background:#FEE2E2"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" stroke="#DC2626" stroke-width="1"/><path d="M4 7.5c.5-.8 3.5-.8 4 0" stroke="#DC2626" stroke-width="1" stroke-linecap="round"/><circle cx="4.5" cy="5" r=".5" fill="#DC2626"/><circle cx="7.5" cy="5" r=".5" fill="#DC2626"/></svg></div><div class="mood-lbl">Mal</div></div>
+                  <div class="mood-btn" onclick="selMood(this)"><div class="mood-icon" style="background:#FEF3C7"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" stroke="#D97706" stroke-width="1"/><path d="M4 7h4" stroke="#D97706" stroke-width="1" stroke-linecap="round"/><circle cx="4.5" cy="5" r=".5" fill="#D97706"/><circle cx="7.5" cy="5" r=".5" fill="#D97706"/></svg></div><div class="mood-lbl">Ok</div></div>
+                  <div class="mood-btn on" onclick="selMood(this)"><div class="mood-icon" style="background:var(--accent-bg)"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" stroke="#5B4FE8" stroke-width="1"/><path d="M4 7c.5.8 3.5.8 4 0" stroke="#5B4FE8" stroke-width="1" stroke-linecap="round"/><circle cx="4.5" cy="5" r=".5" fill="#5B4FE8"/><circle cx="7.5" cy="5" r=".5" fill="#5B4FE8"/></svg></div><div class="mood-lbl">Bem</div></div>
+                  <div class="mood-btn" onclick="selMood(this)"><div class="mood-icon" style="background:var(--teal-bg)"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" stroke="#0FAE85" stroke-width="1"/><path d="M3.5 7c.8 1.2 4.2 1.2 5 0" stroke="#0FAE85" stroke-width="1" stroke-linecap="round"/><circle cx="4.5" cy="4.5" r=".5" fill="#0FAE85"/><circle cx="7.5" cy="4.5" r=".5" fill="#0FAE85"/></svg></div><div class="mood-lbl">Ótimo</div></div>
+                  <div class="mood-btn" onclick="selMood(this)"><div class="mood-icon" style="background:#F0FDF4"><svg width="12" height="12" viewBox="0 0 12 12"><circle cx="6" cy="6" r="5" stroke="#16A34A" stroke-width="1"/><path d="M3 6.5c1 2 5 2 6 0" stroke="#16A34A" stroke-width="1" stroke-linecap="round"/><circle cx="4" cy="4.5" r=".5" fill="#16A34A"/><circle cx="8" cy="4.5" r=".5" fill="#16A34A"/></svg></div><div class="mood-lbl">Incrível</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card" style="height:fit-content">
+              <div class="card-title">Alertas da IA</div>
+              <div class="alert alert-amber"><div class="alert-dot"></div><div class="alert-text"><strong>Compliance 2025</strong> vence em 10 dias — você está em 18%. A IA reservou 3 blocos de 20 min na sua agenda.</div></div>
+              <div class="alert alert-amber"><div class="alert-dot"></div><div class="alert-text">Seu OKR <strong>"Negociação avançada"</strong> está em 45% — pratique com o módulo recomendado.</div></div>
+              <div style="margin-top:14px">
+                <div class="card-title">Recomendado pela IA</div>
+                <div class="ri">
+                  <div style="width:34px;height:34px;border-radius:9px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="9" rx="1.5" stroke="#5B4FE8" stroke-width="1.3"/><path d="M6 6.5l4 2-4 2v-4z" fill="#5B4FE8"/></svg></div>
+                  <div class="ri-info"><div class="ri-name">CRM na prática</div><div class="ri-sub">Baseado nos seus OKRs · 2h30</div></div>
+                  <span class="tb-pill pill-accent" style="font-size:10px">+12 pts</span>
+                </div>
+                <div class="ri">
+                  <div style="width:34px;height:34px;border-radius:9px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M8 2l1.5 4H14l-3.5 2.5 1.5 4L8 10l-4 2.5 1.5-4L2 6h4.5z" stroke="#0FAE85" stroke-width="1.2" fill="none" stroke-linejoin="round"/></svg></div>
+                  <div class="ri-info"><div class="ri-name">Cultura organizacional</div><div class="ri-sub">Alinhado ao diagnóstico · 45 min</div></div>
+                  <span class="tb-pill pill-teal" style="font-size:10px">Novo</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FEED -->
+        <div class="screen" id="sc-feed">
+          <div class="sec-head"><div><div class="sec-title">Feed da empresa</div><div class="sec-sub">Comunicados, celebrações e novidades do time.</div></div><div class="sec-action">+ Publicar</div></div>
+          <div class="g2">
+            <div>
+              <div class="compose-box">
+                <textarea placeholder="Compartilhe uma conquista, ideia ou novidade com o time..."></textarea>
+                <div class="compose-footer">
+                  <div style="display:flex;gap:6px"><span class="tb-pill pill-accent" style="cursor:pointer;font-size:10px">Conquista</span><span class="tb-pill pill-teal" style="cursor:pointer;font-size:10px">Comunicado</span></div>
+                  <button class="btn btn-primary">Publicar</button>
+                </div>
+              </div>
+              <div class="card">
+                <div class="feed-post">
+                  <div class="feed-head"><div class="feed-av" style="background:var(--accent-bg);color:var(--accent)">BT</div><div><div class="feed-name">Bruner Tunes</div><div class="feed-meta">Gestor RH · há 2h</div></div><span class="tb-pill pill-teal" style="margin-left:auto;font-size:10px">Conquista</span></div>
+                  <div class="feed-body">Parabéns ao time comercial pelos resultados de Q1! Batemos 112% da meta. Muito orgulho de cada um de vocês — isso é cultura em ação.</div>
+                  <div class="feed-footer"><div class="feed-act liked">❤ 14</div><div class="feed-act">💬 3</div><div class="feed-act">↗ Compartilhar</div></div>
+                </div>
+                <div class="feed-post">
+                  <div class="feed-head"><div class="feed-av" style="background:var(--teal-bg);color:var(--teal)">RH</div><div><div class="feed-name">Time de RH</div><div class="feed-meta">Comunicado oficial · há 1 dia</div></div><span class="tb-pill pill-amber" style="margin-left:auto;font-size:10px">Importante</span></div>
+                  <div class="feed-body">Novos módulos de Compliance 2025 disponíveis na plataforma. Prazo de conclusão: 15 dias. A IA já adicionou à trilha de todos os colaboradores automaticamente.</div>
+                  <div class="feed-footer"><div class="feed-act">❤ 8</div><div class="feed-act">💬 1</div></div>
+                </div>
+                <div class="feed-post">
+                  <div class="feed-head"><div class="feed-av" style="background:#FEF3C7;color:#D97706">NA</div><div><div class="feed-name">Nathaly Nasario</div><div class="feed-meta">Comunicação · há 2 dias</div></div></div>
+                  <div class="feed-body">Acabei de concluir a trilha de Liderança e Cultura! Recomendo muito — a parte de diagnóstico cultural foi reveladora. Alguém mais já fez?</div>
+                  <div class="feed-footer"><div class="feed-act">❤ 22</div><div class="feed-act">💬 7</div></div>
+                </div>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-title">Top engajadores esta semana</div>
+                <div class="ri"><div class="ri-av" style="background:var(--accent-bg);color:var(--accent)">NA</div><div class="ri-info"><div class="ri-name">Nathaly Nasario</div><div class="ri-sub">Comunicação</div></div><span class="tb-pill pill-accent" style="font-size:10px">320 pts</span></div>
+                <div class="ri"><div class="ri-av" style="background:var(--teal-bg);color:var(--teal)">LT</div><div class="ri-info"><div class="ri-name">Lucas Talacio</div><div class="ri-sub">Comercial</div></div><span class="tb-pill pill-teal" style="font-size:10px">274 pts</span></div>
+                <div class="ri"><div class="ri-av" style="background:var(--amber-bg);color:var(--amber)">AS</div><div class="ri-info"><div class="ri-name">Ana Souza</div><div class="ri-sub">Vendas</div></div><span class="tb-pill pill-amber" style="font-size:10px">248 pts</span></div>
+              </div>
+              <div class="card">
+                <div class="card-title">Celebrações do mês</div>
+                <div class="ri"><div style="width:34px;height:34px;border-radius:50%;background:#FEF3C7;display:flex;align-items:center;justify-content:center;font-size:16px">🎂</div><div class="ri-info"><div class="ri-name">Carlos Lima faz aniversário!</div><div class="ri-sub">Hoje · Gestão</div></div></div>
+                <div class="ri"><div style="width:34px;height:34px;border-radius:50%;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;font-size:16px">🏆</div><div class="ri-info"><div class="ri-name">Ana Souza — 1 ano de empresa</div><div class="ri-sub">Ontem · Vendas</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FEEDBACKS -->
+        <div class="screen" id="sc-feedback">
+          <div class="sec-head"><div><div class="sec-title">Feedbacks</div><div class="sec-sub">Reconhecimentos e pontos de desenvolvimento.</div></div><div class="sec-action">+ Dar feedback</div></div>
+          <div class="tabs">
+            <div class="tab on" onclick="selTab(this,'.fb-list')">Recebidos (8)</div>
+            <div class="tab" onclick="selTab(this,'.fb-list')">Enviados (5)</div>
+            <div class="tab" onclick="selTab(this,'.fb-list')">Solicitar</div>
+          </div>
+          <div class="g2">
+            <div class="fb-list">
+              <div class="fb-card">
+                <div class="fb-head">
+                  <div class="ri-av" style="background:var(--accent-bg);color:var(--accent);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">BT</div>
+                  <div style="flex:1"><div class="ri-name">Bruner Tunes</div><div class="ri-sub">Gestor direto · há 1 dia</div></div>
+                  <span class="tb-pill pill-teal" style="font-size:10px">Positivo</span>
+                </div>
+                <div class="fb-body">"O Lucas demonstrou excelente iniciativa na apresentação do projeto. A organização e clareza das ideias foram destaque para o cliente."</div>
+                <div class="fb-stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span></div>
+              </div>
+              <div class="fb-card">
+                <div class="fb-head">
+                  <div class="ri-av" style="background:var(--teal-bg);color:var(--teal);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">AS</div>
+                  <div style="flex:1"><div class="ri-name">Ana Souza</div><div class="ri-sub">Colega · há 3 dias</div></div>
+                  <span class="tb-pill pill-amber" style="font-size:10px">Desenvolvimento</span>
+                </div>
+                <div class="fb-body">"Poderia melhorar o tempo de resposta nas solicitações do time. Às vezes fica represado e atrasa o fluxo."</div>
+                <div class="fb-stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div>
+              </div>
+              <div class="fb-card">
+                <div class="fb-head">
+                  <div class="ri-av" style="background:var(--amber-bg);color:var(--amber);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">CM</div>
+                  <div style="flex:1"><div class="ri-name">Carlos Melo</div><div class="ri-sub">Colega · há 5 dias</div></div>
+                  <span class="tb-pill pill-teal" style="font-size:10px">Positivo</span>
+                </div>
+                <div class="fb-body">"Sempre disposto a ajudar e compartilhar conhecimento. Faz diferença no ambiente do time."</div>
+                <div class="fb-stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span></div>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-title">Dar feedback agora</div>
+                <div class="ri" style="padding:8px 0;border:none;margin-bottom:10px"><div class="ri-av" style="background:var(--surface3);color:var(--ink3);width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">NA</div><div class="ri-info"><div class="ri-name">Nathaly Nasario</div><div class="ri-sub">Comunicação</div></div></div>
+                <div style="display:flex;gap:6px;margin-bottom:12px">
+                  <div class="tab on" style="flex:1;padding:7px 0;font-size:11px;text-align:center;border-radius:7px;cursor:pointer;background:var(--teal-bg);color:var(--teal);border:1px solid #9FE1CB;font-weight:700">Positivo</div>
+                  <div class="tab" style="flex:1;padding:7px 0;font-size:11px;text-align:center;border-radius:7px;cursor:pointer;background:var(--surface3);color:var(--ink3);font-weight:600;border:1px solid var(--border)">Desenvolvimento</div>
+                </div>
+                <div class="compose-box">
+                  <textarea placeholder="Descreva o feedback de forma específica e construtiva..." style="min-height:80px"></textarea>
+                  <div class="compose-footer"><span style="font-size:11px;color:var(--ink4)">Seja específico e empático</span><button class="btn btn-primary">Enviar</button></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Resumo dos seus feedbacks</div>
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
+                  <div style="font-size:28px;font-weight:800;color:var(--ink)">4.3</div>
+                  <div><div class="fb-stars"><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-filled">★</span><span class="star-empty">★</span></div><div style="font-size:11px;color:var(--ink3);margin-top:3px">Média geral · 8 feedbacks</div></div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="color:var(--teal);font-weight:600;width:80px">Positivos</span><div class="pbar" style="flex:1"><div class="pfill pfill-teal" style="width:75%"></div></div><span style="color:var(--ink3);min-width:24px;text-align:right">75%</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="color:var(--amber);font-weight:600;width:80px">Desenvolv.</span><div class="pbar" style="flex:1"><div class="pfill pfill-amber" style="width:25%"></div></div><span style="color:var(--ink3);min-width:24px;text-align:right">25%</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1:1 -->
+        <div class="screen" id="sc-11">
+          <div class="sec-head"><div><div class="sec-title">Reuniões 1:1</div><div class="sec-sub">Acompanhe e prepare suas reuniões individuais com o gestor.</div></div><div class="sec-action">+ Agendar 1:1</div></div>
+          <div class="g2">
+            <div>
+              <div class="card">
+                <div class="card-title">Próximas reuniões</div>
+                <div class="meet-card">
+                  <div class="meet-date-box"><div class="meet-day">20</div><div class="meet-mon">Mar</div></div>
+                  <div class="meet-info"><div class="meet-title">1:1 com Bruner Tunes</div><div class="meet-meta">14h00 · 45 min · Remoto (Meet)</div></div>
+                  <span class="meet-status tb-pill pill-teal">Confirmado</span>
+                </div>
+                <div class="meet-card">
+                  <div class="meet-date-box"><div class="meet-day">28</div><div class="meet-mon">Mar</div></div>
+                  <div class="meet-info"><div class="meet-title">Check-in de OKRs</div><div class="meet-meta">10h00 · 30 min · Presencial</div></div>
+                  <span class="meet-status tb-pill pill-amber">Pendente</span>
+                </div>
+                <div class="meet-card">
+                  <div class="meet-date-box"><div class="meet-day">04</div><div class="meet-mon">Abr</div></div>
+                  <div class="meet-info"><div class="meet-title">1:1 com Bruner Tunes</div><div class="meet-meta">14h00 · 45 min · Remoto</div></div>
+                  <span class="meet-status tb-pill" style="background:var(--surface3);color:var(--ink3)">Agendado</span>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Histórico</div>
+                <div class="ri"><div class="ri-info"><div class="ri-name">1:1 · 06 Mar 2025</div><div class="ri-sub">Bruner Tunes · 45 min · 4 tópicos abordados</div></div><span class="tb-pill pill-teal" style="font-size:10px">Concluída</span></div>
+                <div class="ri"><div class="ri-info"><div class="ri-name">1:1 · 21 Fev 2025</div><div class="ri-sub">Bruner Tunes · 45 min · 3 tópicos abordados</div></div><span class="tb-pill pill-teal" style="font-size:10px">Concluída</span></div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-title">Pauta — 1:1 amanhã · Bruner Tunes</div>
+              <div style="font-size:12px;color:var(--ink3);margin-bottom:14px">Prepare os tópicos que você quer discutir. Seu gestor também terá acesso.</div>
+              <div class="pauta-item"><div class="pcheck done" onclick="togCheck(this)"></div><div class="ptext done">Revisão dos OKRs do trimestre</div></div>
+              <div class="pauta-item"><div class="pcheck" onclick="togCheck(this)"></div><div class="ptext">Plano de desenvolvimento individual (PDI)</div></div>
+              <div class="pauta-item"><div class="pcheck" onclick="togCheck(this)"></div><div class="ptext">Feedback sobre a apresentação ao cliente Omega</div></div>
+              <div class="pauta-item"><div class="pcheck" onclick="togCheck(this)"></div><div class="ptext">Próximos desafios do time comercial em Q2</div></div>
+              <div class="pauta-item" style="border:none"><div class="pcheck" onclick="togCheck(this)"></div><div class="ptext">Solicitar feedback 360°</div></div>
+              <div class="compose-box" style="margin-top:12px">
+                <textarea placeholder="Adicionar novo tópico à pauta..." style="min-height:36px"></textarea>
+              </div>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-primary">Salvar pauta</button>
+                <button class="btn btn-ghost">Compartilhar com gestor</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CLIMA -->
+        <div class="screen" id="sc-clima">
+          <div class="sec-head"><div><div class="sec-title">Clima organizacional</div><div class="sec-sub">Pesquisa de março 2025 · anônima e segura.</div></div><span class="tb-pill pill-amber">Aberta · 12 dias restantes</span></div>
+          <div class="g2">
+            <div class="card">
+              <div class="clima-q">1. Como você avalia a comunicação interna da empresa?</div>
+              <div class="nps-row">
+                <div class="nps-n" onclick="selNps(this)">1</div><div class="nps-n" onclick="selNps(this)">2</div><div class="nps-n" onclick="selNps(this)">3</div><div class="nps-n" onclick="selNps(this)">4</div><div class="nps-n on" onclick="selNps(this)">5</div><div class="nps-n" onclick="selNps(this)">6</div><div class="nps-n" onclick="selNps(this)">7</div><div class="nps-n" onclick="selNps(this)">8</div><div class="nps-n" onclick="selNps(this)">9</div><div class="nps-n" onclick="selNps(this)">10</div>
+              </div>
+              <div class="nps-labels"><span>Muito ruim</span><span>Excelente</span></div>
+              <div class="clima-q">2. Você se sente reconhecido pelo seu gestor?</div>
+              <div class="mood-track" style="margin-bottom:18px">
+                <div class="mood-btn" onclick="selMood(this)"><div class="mood-icon" style="background:#FEE2E2"><div style="width:10px;height:10px;border-radius:50%;background:#DC2626"></div></div><div class="mood-lbl">Nunca</div></div>
+                <div class="mood-btn" onclick="selMood(this)"><div class="mood-icon" style="background:#FEF3C7"><div style="width:10px;height:10px;border-radius:50%;background:#D97706"></div></div><div class="mood-lbl">Às vezes</div></div>
+                <div class="mood-btn on" onclick="selMood(this)"><div class="mood-icon" style="background:var(--accent-bg)"><div style="width:10px;height:10px;border-radius:50%;background:var(--accent)"></div></div><div class="mood-lbl">Frequente</div></div>
+                <div class="mood-btn" onclick="selMood(this)"><div class="mood-icon" style="background:var(--teal-bg)"><div style="width:10px;height:10px;border-radius:50%;background:var(--teal)"></div></div><div class="mood-lbl">Sempre</div></div>
+              </div>
+              <div class="clima-q">3. Sugestão livre (anônima)</div>
+              <div class="compose-box"><textarea placeholder="Escreva sua sugestão..."></textarea></div>
+              <button class="btn btn-primary">Enviar pesquisa</button>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-title">Resultado geral da empresa</div>
+                <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px">
+                  <div style="text-align:center"><div style="font-size:32px;font-weight:800;color:var(--accent)">8.2</div><div style="font-size:10px;font-weight:700;color:var(--ink3)">NPS CLIMA</div></div>
+                  <div style="flex:1;font-size:12px;color:var(--ink3);line-height:1.6">Acima da média do setor (7.4). Time comercial lidera com 9.1 de satisfação média.</div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="color:var(--ink2);font-weight:600;width:100px">Comunicação</span><div class="pbar" style="flex:1"><div class="pfill pfill-teal" style="width:82%"></div></div><span style="color:var(--ink3);min-width:28px;text-align:right">8.2</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="color:var(--ink2);font-weight:600;width:100px">Reconhecimento</span><div class="pbar" style="flex:1"><div class="pfill pfill-accent" style="width:78%"></div></div><span style="color:var(--ink3);min-width:28px;text-align:right">7.8</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="color:var(--ink2);font-weight:600;width:100px">Liderança</span><div class="pbar" style="flex:1"><div class="pfill pfill-teal" style="width:86%"></div></div><span style="color:var(--ink3);min-width:28px;text-align:right">8.6</span></div>
+                  <div style="display:flex;align-items:center;gap:8px;font-size:12px"><span style="color:var(--ink2);font-weight:600;width:100px">Crescimento</span><div class="pbar" style="flex:1"><div class="pfill pfill-amber" style="width:68%"></div></div><span style="color:var(--ink3);min-width:28px;text-align:right">6.8</span></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Participação</div>
+                <div style="font-size:28px;font-weight:800;color:var(--teal);margin-bottom:4px">78%</div>
+                <div style="font-size:12px;color:var(--ink3);margin-bottom:10px">194 de 248 colaboradores responderam</div>
+                <div class="pbar" style="height:8px"><div class="pfill pfill-teal" style="width:78%"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- OKR -->
+        <div class="screen" id="sc-okr">
+          <div class="sec-head"><div><div class="sec-title">OKRs e metas</div><div class="sec-sub">Ciclo Q1 2025 · Encerra em 15 dias.</div></div><div class="sec-action">+ Novo objetivo</div></div>
+          <div class="g4" style="margin-bottom:16px">
+            <div class="stat"><div class="stat-icon" style="background:var(--accent-bg)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="#5B4FE8" stroke-width="1.3"/><path d="M5 8l2 2 4-4" stroke="#5B4FE8" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-val">3</div><div class="stat-label">Objetivos ativos</div></div>
+            <div class="stat"><div class="stat-icon" style="background:var(--teal-bg)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 12l4-5 3 3 5-7" stroke="#0FAE85" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-val">67%</div><div class="stat-label">Avanço médio</div><div class="stat-delta delta-up"><span class="delta-arrow">↑</span>Meta: 80%</div></div>
+            <div class="stat"><div class="stat-icon" style="background:#F0FDF4"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="3" y="3" width="10" height="10" rx="2" stroke="#16A34A" stroke-width="1.3"/><path d="M5.5 8l2 2 3-3" stroke="#16A34A" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="stat-val">7/9</div><div class="stat-label">KRs no prazo</div></div>
+            <div class="stat"><div class="stat-icon" style="background:var(--amber-bg)"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5" stroke="#D97706" stroke-width="1.3"/><path d="M8 5v3l2 1" stroke="#D97706" stroke-width="1.3" stroke-linecap="round"/></svg></div><div class="stat-val">28 Mar</div><div class="stat-label">Próximo check-in</div></div>
+          </div>
+          <div class="okr-obj-card">
+            <div class="okr-head"><div class="okr-title">Expandir carteira no segmento tech</div><span class="okr-pct-badge tb-pill pill-teal">75%</span></div>
+            <div class="okr-kr-row"><div class="okr-kr-label">Prospectar 30 novos leads qualificados</div><div class="pbar" style="width:100px"><div class="pfill pfill-teal" style="width:90%"></div></div><div class="okr-kr-val">27/30</div></div>
+            <div class="okr-kr-row"><div class="okr-kr-label">Converter 8 oportunidades em contrato</div><div class="pbar" style="width:100px"><div class="pfill pfill-amber" style="width:62%"></div></div><div class="okr-kr-val">5/8</div></div>
+            <div class="okr-kr-row"><div class="okr-kr-label">NPS de clientes acima de 70 pts</div><div class="pbar" style="width:100px"><div class="pfill pfill-teal" style="width:100%"></div></div><div class="okr-kr-val">74 ✓</div></div>
+          </div>
+          <div class="okr-obj-card">
+            <div class="okr-head"><div class="okr-title">Desenvolver habilidades de negociação</div><span class="okr-pct-badge tb-pill pill-amber">45%</span></div>
+            <div class="okr-kr-row"><div class="okr-kr-label">Concluir trilha de negociação na plataforma</div><div class="pbar" style="width:100px"><div class="pfill pfill-amber" style="width:62%"></div></div><div class="okr-kr-val">62%</div></div>
+            <div class="okr-kr-row"><div class="okr-kr-label">Aplicar técnicas em 3 reuniões documentadas</div><div class="pbar" style="width:100px"><div class="pfill pfill-red" style="width:33%"></div></div><div class="okr-kr-val">1/3</div></div>
+          </div>
+          <div class="okr-obj-card">
+            <div class="okr-head"><div class="okr-title">Fortalecer relacionamento com clientes atuais</div><span class="okr-pct-badge tb-pill pill-teal">92%</span></div>
+            <div class="okr-kr-row"><div class="okr-kr-label">Follow-up mensal com top 20 clientes</div><div class="pbar" style="width:100px"><div class="pfill pfill-teal" style="width:95%"></div></div><div class="okr-kr-val">19/20</div></div>
+            <div class="okr-kr-row"><div class="okr-kr-label">Renovação de 90% dos contratos</div><div class="pbar" style="width:100px"><div class="pfill pfill-teal" style="width:89%"></div></div><div class="okr-kr-val">89%</div></div>
+          </div>
+        </div>
+
+        <!-- CURSOS -->
+        <div class="screen" id="sc-cursos">
+          <div class="sec-head"><div><div class="sec-title">Cursos</div><div class="sec-sub">Curadoria personalizada pela IA com base no seu perfil e OKRs.</div></div><div class="sec-action">Explorar catálogo</div></div>
+          <div class="tabs">
+            <div class="tab on" onclick="selTab(this,'.curso-wrap')">Todos</div>
+            <div class="tab" onclick="selTab(this,'.curso-wrap')">Em andamento</div>
+            <div class="tab" onclick="selTab(this,'.curso-wrap')">Concluídos</div>
+            <div class="tab" onclick="selTab(this,'.curso-wrap')">Recomendados pela IA</div>
+          </div>
+          <div class="curso-wrap curso-grid">
+            <div class="curso-card">
+              <div class="curso-thumb" style="background:linear-gradient(135deg,#1e1b4b,#3730a3)">
+                <div class="curso-badge" style="background:var(--accent-bg);color:var(--accent)">Em andamento</div>
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><rect x="6" y="8" width="24" height="20" rx="3" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/><path d="M14 15l8 4-8 4V15z" fill="rgba(255,255,255,.8)"/></svg>
+              </div>
+              <div class="curso-body">
+                <div class="curso-tag" style="color:var(--accent)">Vendas</div>
+                <div class="curso-title">Técnicas avançadas de negociação</div>
+                <div class="curso-meta">8 módulos · 4h · Certificado incluso</div>
+                <div class="curso-footer"><div class="pbar" style="flex:1"><div class="pfill pfill-accent" style="width:62%"></div></div><div class="curso-pct">62%</div></div>
+              </div>
+            </div>
+            <div class="curso-card">
+              <div class="curso-thumb" style="background:linear-gradient(135deg,#064e3b,#047857)">
+                <div class="curso-badge" style="background:var(--teal-bg);color:var(--teal)">Concluído</div>
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="10" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/><path d="M13 18l4 4 7-8" stroke="rgba(255,255,255,.8)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="curso-body">
+                <div class="curso-tag" style="color:var(--teal)">Cultura</div>
+                <div class="curso-title">Valores e propósito organizacional</div>
+                <div class="curso-meta">3 módulos · 1h30 · Certificado emitido</div>
+                <div class="curso-footer"><div class="pbar" style="flex:1"><div class="pfill pfill-teal" style="width:100%"></div></div><div class="curso-pct" style="color:var(--teal)">✓ Concluído</div></div>
+              </div>
+            </div>
+            <div class="curso-card" style="border:2px solid var(--red-bg)">
+              <div class="curso-thumb" style="background:linear-gradient(135deg,#7f1d1d,#b91c1c)">
+                <div class="curso-badge" style="background:var(--red-bg);color:var(--red)">Urgente</div>
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M18 10v8M18 22v2" stroke="rgba(255,255,255,.8)" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="18" r="10" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/></svg>
+              </div>
+              <div class="curso-body">
+                <div class="curso-tag" style="color:var(--red)">Compliance · Obrigatório</div>
+                <div class="curso-title">Compliance e ética nos negócios 2025</div>
+                <div class="curso-meta">6 módulos · 3h · Prazo: 10 dias</div>
+                <div class="curso-footer"><div class="pbar" style="flex:1"><div class="pfill pfill-red" style="width:18%"></div></div><div class="curso-pct" style="color:var(--red)">18%</div></div>
+              </div>
+            </div>
+            <div class="curso-card" style="border:2px dashed var(--accent-border)">
+              <div class="curso-thumb" style="background:linear-gradient(135deg,#312e81,#4c1d95)">
+                <div class="curso-badge" style="background:var(--accent-bg);color:var(--accent)">IA recomendou</div>
+                <svg width="36" height="36" viewBox="0 0 36 36" fill="none"><path d="M18 8l2.5 7H27l-5.5 4 2 7L18 22l-5.5 4 2-7L9 15h6.5z" stroke="rgba(255,255,255,.8)" stroke-width="1.5" fill="none" stroke-linejoin="round"/></svg>
+              </div>
+              <div class="curso-body">
+                <div class="curso-tag" style="color:var(--accent)">Ferramentas · Novo</div>
+                <div class="curso-title">CRM na prática — Salesforce</div>
+                <div class="curso-meta">5 módulos · 2h30 · Alinhado aos seus OKRs</div>
+                <div><button class="btn btn-primary" style="width:100%;margin-top:4px">Começar curso</button></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- TRILHA -->
+        <div class="screen" id="sc-trilha">
+          <div class="sec-head"><div><div class="sec-title">Minha trilha</div><div class="sec-sub">Onboarding Comercial · Personalizada pela IA com base no seu diagnóstico.</div></div><span class="tb-pill pill-accent">8 módulos · 62%</span></div>
+          <div class="g2">
+            <div class="card">
+              <div class="card-title">Progresso geral</div>
+              <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+                <div style="font-size:32px;font-weight:800;color:var(--accent)">62%</div>
+                <div><div style="font-size:13px;font-weight:600;color:var(--ink)">5 de 8 módulos concluídos</div><div style="font-size:12px;color:var(--ink3);margin-top:2px">~2h restantes · Certificado disponível ao concluir</div></div>
+              </div>
+              <div class="pbar" style="height:10px;margin-bottom:18px"><div class="pfill pfill-accent" style="width:62%"></div></div>
+              <div class="card-title">Módulos</div>
+              <div>
+                <div class="timeline-item"><div class="tl-left"><div class="tl-dot tl-dot-done"></div><div class="tl-line" style="height:30px"></div></div><div class="tl-body"><div class="tl-title">Introdução ao produto</div><div class="tl-meta">Texto · 20 min · <span style="color:var(--teal);font-weight:600">Concluído</span></div></div></div>
+                <div class="timeline-item"><div class="tl-left"><div class="tl-dot tl-dot-done"></div><div class="tl-line" style="height:30px"></div></div><div class="tl-body"><div class="tl-title">Cultura e valores da empresa</div><div class="tl-meta">Vídeo · 35 min · <span style="color:var(--teal);font-weight:600">Concluído</span></div></div></div>
+                <div class="timeline-item"><div class="tl-left"><div class="tl-dot tl-dot-done"></div><div class="tl-line" style="height:30px"></div></div><div class="tl-body"><div class="tl-title">Processo de vendas — fundamentos</div><div class="tl-meta">Texto + quiz · 45 min · <span style="color:var(--teal);font-weight:600">Concluído</span></div></div></div>
+                <div class="timeline-item"><div class="tl-left"><div class="tl-dot tl-dot-done"></div><div class="tl-line" style="height:30px"></div></div><div class="tl-body"><div class="tl-title">CRM na prática</div><div class="tl-meta">Vídeo · 30 min · <span style="color:var(--teal);font-weight:600">Concluído</span></div></div></div>
+                <div class="timeline-item" style="background:var(--accent-bg);border-radius:10px;padding:10px;margin:-4px 0"><div class="tl-left"><div class="tl-dot tl-dot-active"></div><div class="tl-line" style="height:24px;background:var(--accent-border)"></div></div><div class="tl-body"><div class="tl-title" style="color:var(--accent)">Técnicas avançadas de negociação</div><div class="tl-meta">Vídeo + quiz · 50 min · <span style="color:var(--accent);font-weight:700">Em andamento</span></div><button class="btn btn-primary" style="margin-top:8px;font-size:11px;padding:6px 12px">Continuar módulo →</button></div></div>
+                <div class="timeline-item" style="opacity:.45"><div class="tl-left"><div class="tl-dot tl-dot-locked"></div><div class="tl-line" style="height:30px"></div></div><div class="tl-body"><div class="tl-title">Objeções e contorno</div><div class="tl-meta">Texto · 25 min · Bloqueado</div></div></div>
+                <div class="timeline-item" style="opacity:.45"><div class="tl-left"><div class="tl-dot tl-dot-locked"></div><div class="tl-line" style="height:30px"></div></div><div class="tl-body"><div class="tl-title">Fechamento e pós-venda</div><div class="tl-meta">Texto · 30 min · Bloqueado</div></div></div>
+                <div class="timeline-item" style="opacity:.45"><div class="tl-left"><div class="tl-dot tl-dot-locked"></div></div><div class="tl-body"><div class="tl-title">Avaliação final + certificado</div><div class="tl-meta">Quiz · 20 min · Bloqueado</div></div></div>
+              </div>
+            </div>
+            <div>
+              <div class="card">
+                <div class="card-title">Diagnóstico da IA</div>
+                <div style="display:flex;flex-direction:column;gap:10px">
+                  <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="font-weight:600;color:var(--ink2)">Negociação</span><span style="color:var(--ink3)">72%</span></div><div class="pbar" style="height:6px"><div class="pfill pfill-accent" style="width:72%"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="font-weight:600;color:var(--ink2)">Produto</span><span style="color:var(--ink3)">88%</span></div><div class="pbar" style="height:6px"><div class="pfill pfill-teal" style="width:88%"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="font-weight:600;color:var(--ink2)">CRM</span><span style="color:var(--ink3)">55%</span></div><div class="pbar" style="height:6px"><div class="pfill pfill-amber" style="width:55%"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="font-weight:600;color:var(--ink2)">Cultura</span><span style="color:var(--ink3)">95%</span></div><div class="pbar" style="height:6px"><div class="pfill pfill-teal" style="width:95%"></div></div></div>
+                  <div><div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px"><span style="font-weight:600;color:var(--ink2)">Compliance</span><span style="color:var(--ink3);color:var(--red)">18%</span></div><div class="pbar" style="height:6px"><div class="pfill pfill-red" style="width:18%"></div></div></div>
+                </div>
+              </div>
+              <div class="card">
+                <div class="card-title">Conquistas</div>
+                <div class="ri"><div style="width:36px;height:36px;border-radius:9px;background:var(--accent-bg);display:flex;align-items:center;justify-content:center;font-size:18px">🏅</div><div class="ri-info"><div class="ri-name">Primeira trilha concluída</div><div class="ri-sub">Cultura e valores · Março 2025</div></div></div>
+                <div class="ri"><div style="width:36px;height:36px;border-radius:9px;background:var(--amber-bg);display:flex;align-items:center;justify-content:center;font-size:18px">🔥</div><div class="ri-info"><div class="ri-name">7 dias consecutivos</div><div class="ri-sub">Streak de aprendizado</div></div></div>
+                <div class="ri"><div style="width:36px;height:36px;border-radius:9px;background:var(--teal-bg);display:flex;align-items:center;justify-content:center;font-size:18px">⭐</div><div class="ri-info"><div class="ri-name">Top 10% do time</div><div class="ri-sub">Engajamento semanal</div></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const titles={'sc-home':'Início','sc-feed':'Feed da empresa','sc-feedback':'Feedbacks','sc-11':'Reuniões 1:1','sc-clima':'Clima organizacional','sc-okr':'OKRs e metas','sc-cursos':'Cursos','sc-trilha':'Minha trilha'};
+function goApp(sc){
+  document.getElementById('pg-login').style.display='none';
+  const app=document.getElementById('pg-app');
+  app.style.display='flex';
+  app.style.width='100%';
+  app.style.height='100%';
+  activate(sc);
+}
+function nav(el){
+  const sc=el.getAttribute('data-sc');
+  activate(sc);
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('on'));
+  el.classList.add('on');
+}
+function activate(sc){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('on'));
+  document.getElementById(sc).classList.add('on');
+  document.getElementById('tb-title').textContent=titles[sc]||'';
+}
+function selMood(el){
+  const row=el.closest('.mood-track');
+  row.querySelectorAll('.mood-btn').forEach(b=>b.classList.remove('on'));
+  el.classList.add('on');
+}
+function selNps(el){
+  el.closest('.nps-row').querySelectorAll('.nps-n').forEach(n=>n.classList.remove('on'));
+  el.classList.add('on');
+}
+function selTab(el){
+  el.closest('.tabs').querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  el.classList.add('on');
+}
+function togCheck(el){
+  el.classList.toggle('done');
+  const t=el.nextElementSibling;
+  if(t)t.classList.toggle('done');
+}
+</script>
